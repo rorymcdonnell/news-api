@@ -64,4 +64,12 @@ describe("/api/articles/:article_id", () => {
         expect(msg).toBe("ID does not exist try again bozo!");
       });
   });
+  test("status: 400 bad request - invalid ID", () => {
+    return request(app)
+      .get("/api/articles/finchat")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("invalid ID, sort it out!");
+      });
+  });
 });
