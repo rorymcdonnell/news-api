@@ -39,7 +39,7 @@ describe("/topics", () => {
   });
 });
 
-describe.only("/api/articles/:article_id", () => {
+describe("/api/articles/:article_id", () => {
   test("status: 200, responds with a single article object matching given id", () => {
     return request(app)
       .get("/api/articles/1")
@@ -54,6 +54,14 @@ describe.only("/api/articles/:article_id", () => {
           author: "butter_bridge",
           created_at: expect.any(String),
         });
+      });
+  });
+  test("status: 404 not found - article ID does not exist", () => {
+    return request(app)
+      .get("/api/articles/1000")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("ID does not exist try again bozo!");
       });
   });
 });

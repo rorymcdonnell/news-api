@@ -5,17 +5,22 @@ exports.selectTopics = async () => {
   return topics.rows;
 };
 
-exports.selectArticlesById = async (article_id) => {
+exports.selectArticlesById = (article_id) => {
   console.log("IN THE MODEL YEEHAWW!");
-  const article = await db.query(
-    `SELECT * FROM articles WHERE article_id = $1`,
-    [article_id]
-  );
-  return article.rows[0];
+  return db
+    .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
+    .then(({ rows }) => {
+      console.log(rows);
+      if (!rows.length) {
+        return Promise.reject({
+          status: 404,
+          msg: "ID does not exist try again bozo!",
+        });
+      }
+      return rows[0];
+    });
 };
 
-// exports.selectParkById = (park_id) => {
-//   return db
-//     .query("SELECT * FROM parks WHERE park_id = $1;", [park_id])
-//     .then((result) => result.rows[0]);
-// };
+exports.updateArticlesById = (article_id) => {
+  console.log("IN THE MODEL YEEHAWW!");
+};
