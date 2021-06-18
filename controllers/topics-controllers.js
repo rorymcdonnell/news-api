@@ -26,11 +26,11 @@ exports.getArticlesById = (req, res, next) => {
 
 exports.patchArticlesById = (req, res, next) => {
   const { article_id } = req.params;
-  const { inc_votes: newVote } = req.body;
+  const { inc_votes } = req.body;
   console.log("IN THE CONTROLLER WOOHOO!");
-  selectArticlesById(article_id)
+  updateArticlesById(article_id, inc_votes)
     .then((article) => {
-      console.log(article);
+      res.status(200).send({ article });
     })
-    .catch((err) => err.next);
+    .catch((err) => next(err));
 };

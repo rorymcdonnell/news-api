@@ -73,3 +73,38 @@ describe("/api/articles/:article_id", () => {
       });
   });
 });
+
+describe("/api/articles/:article_id", () => {
+  test("PATCH status 200: responds with updated votes tally for a single article", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 5 })
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            body: "I find this existence challenging",
+            votes: 105,
+            topic: "mitch",
+            author: "butter_bridge",
+            created_at: expect.any(String),
+          })
+        );
+      });
+  });
+  test("status: 404 ID not found - article ID does not exist", () => {
+    return request(app)
+      .patch("/api/articles/1000")
+      .send({ inc_votes: 5 })
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("article ID does not exist");
+      });
+  });
+});
+
+// describe("/api/articles", () => {
+//   test("GET status: 200 - responds with articles array of articles objects", () => {});
+// });
