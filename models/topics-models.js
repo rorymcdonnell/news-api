@@ -38,3 +38,10 @@ exports.updateArticlesById = (article_id, inc_votes) => {
       return rows[0];
     });
 };
+
+exports.selectAllArticles = () => {
+  return db.query(`SELECT * FROM articles;`).then((response) => {
+    console.log(response.rows);
+    return response.rows;
+  });
+};
