@@ -44,11 +44,26 @@ exports.selectAllArticles = ({
   order = "DESC",
   topic,
 }) => {
+  const validColumns = [
+    "create_at",
+    "author",
+    "votes",
+    "title",
+    "article_id",
+    "topic",
+    "number_of_comments",
+  ];
+
+  if (!validColumns.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "invalid sort_by column" });
+  }
+
   let queryStr = `SELECT articles.*, COUNT(comment_id) AS number_of_comments
     FROM articles
     LEFT JOIN comments ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY ${sort_by} ${order};`;
+    GROUP BY articles.article_id`;
+
+  queryStr += `ORDER BY ${sort_by} ${order};`;
   return db.query(queryStr).then((response) => {
     return response.rows;
   });
