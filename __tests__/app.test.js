@@ -122,6 +122,7 @@ describe.only("/api/articles", () => {
               topic: expect.any(String),
               author: expect.any(String),
               created_at: expect.any(String),
+              number_of_comments: expect.any(String),
             })
           );
         });

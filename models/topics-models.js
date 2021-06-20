@@ -39,9 +39,17 @@ exports.updateArticlesById = (article_id, inc_votes) => {
     });
 };
 
-exports.selectAllArticles = () => {
-  return db.query(`SELECT * FROM articles;`).then((response) => {
-    console.log(response.rows);
+exports.selectAllArticles = ({
+  sort_by = "created_at",
+  order = "DESC",
+  topic,
+}) => {
+  let queryStr = `SELECT articles.*, COUNT(comment_id) AS number_of_comments
+    FROM articles
+    LEFT JOIN comments ON articles.article_id = comments.article_id
+    GROUP BY articles.article_id
+    ORDER BY ${sort_by} ${order};`;
+  return db.query(queryStr).then((response) => {
     return response.rows;
   });
 };
