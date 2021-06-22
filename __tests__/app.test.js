@@ -105,7 +105,7 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
-describe.only("/api/articles", () => {
+describe("/api/articles", () => {
   test("GET status: 200 - responds with articles array of articles objects", () => {
     return request(app)
       .get("/api/articles")
@@ -126,6 +126,24 @@ describe.only("/api/articles", () => {
             })
           );
         });
+      });
+  });
+  test("should be sorted by number of votes in query ", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles[0]).toEqual(
+          expect.objectContaining({
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            body: "I find this existence challenging",
+            votes: 100,
+            topic: "mitch",
+            author: "butter_bridge",
+            created_at: expect.any(String),
+          })
+        );
       });
   });
 });
