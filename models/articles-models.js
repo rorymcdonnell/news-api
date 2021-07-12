@@ -1,4 +1,6 @@
 const db = require("../db/connection");
+const fs = require("fs/promises");
+const { postgresNumber } = require("../db/utils/data-manipulation");
 
 exports.selectArticlesById = (article_id) => {
   return db
@@ -31,35 +33,28 @@ exports.updateArticlesById = (article_id, inc_votes) => {
     });
 };
 
-exports.selectAllArticles = ({
+// GET /api/articles
+exports.selectAllArticles = async function (
   sort_by = "created_at",
   order = "DESC",
-  topic,
-}) => {
-  const validColumns = [
-    "created_at",
-    "author",
-    "votes",
-    "title",
-    "article_id",
-    "topic",
-    "number_of_comments",
-  ];
-
-  if (!validColumns.includes(sort_by)) {
-    return Promise.reject({ status: 400, msg: "invalid sort_by column" });
+  topic
+) {
+  let whereTopic = "";
+  if (topic) {
+    whereTopic = format("WHERE articles.topic = %L", topic);
   }
-
-  let queryStr = `SELECT articles.*, COUNT(comment_id) AS number_of_comments
-    FROM articles
-    LEFT JOIN comments ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id `;
-
-  queryStr += `ORDER BY ${sort_by} ${order};`;
-  console.log(queryStr);
-  return db.query(queryStr).then((response) => {
-    return response.rows;
-  });
+  const result = await dbConn.query(
+    `SELECT article_id, title, votes, topic, author, created_at, COUNT(comments.comment_id) AS comment_count FROM articles NATURAL LEFT JOIN comments ${whereTopic} GROUP BY article_id ORDER BY ${sort_by} ${order};`
+  );
+  if (result.rows.length === 0) {
+    const validTopic = await dbConn.query(
+      `SELECT * FROM topics WHERE slug = '${topic}';`
+    );
+    if (validTopic.rows.length === 0) {
+      return undefined;
+    }
+  }
+  return postgresNumber(result.rows, "comment_count");
 };
 
 exports.checkArticleExists = (article_id) => {

@@ -106,7 +106,7 @@ describe("/api/articles/:article_id", () => {
 });
 
 describe.only("/api/articles", () => {
-  test("GET status: 200 - responds with articles array of articles objects", () => {
+  test.only("GET status: 200 - responds with articles array of articles objects", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -128,7 +128,7 @@ describe.only("/api/articles", () => {
         });
       });
   });
-  test.only("should be sorted by number of votes in query ", () => {
+  test("should be sorted by number of votes in query ", () => {
     return request(app)
       .get("/api/articles?sort_by=number_of_comments")
       .expect(200)

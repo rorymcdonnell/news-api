@@ -49,3 +49,17 @@ exports.formatCommentsData = (commentArray, articleRef) => {
     }
   );
 };
+exports.postgresNumber = function (data, varName) {
+  const newData = data.map((row) => {
+    let newRow = {};
+    Object.keys(row).forEach((key) => {
+      if (key === varName) {
+        newRow[key] = +row[key];
+      } else {
+        newRow[key] = row[key];
+      }
+    });
+    return newRow;
+  });
+  return newData;
+};
