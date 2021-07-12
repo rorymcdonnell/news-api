@@ -105,7 +105,7 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
-describe("/api/articles", () => {
+describe.only("/api/articles", () => {
   test("GET status: 200 - responds with articles array of articles objects", () => {
     return request(app)
       .get("/api/articles")
@@ -128,9 +128,9 @@ describe("/api/articles", () => {
         });
       });
   });
-  test("should be sorted by number of votes in query ", () => {
+  test.only("should be sorted by number of votes in query ", () => {
     return request(app)
-      .get("/api/articles?sort_by=votes")
+      .get("/api/articles?sort_by=number_of_comments")
       .expect(200)
       .then(({ body: { articles } }) => {
         expect(articles[0]).toEqual(

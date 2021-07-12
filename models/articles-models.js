@@ -61,3 +61,13 @@ exports.selectAllArticles = ({
     return response.rows;
   });
 };
+
+exports.checkArticleExists = (article_id) => {
+  return db
+    .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
+    .then(([article]) => {
+      if (article === undefined) {
+        return Promise.reject({ status: 404, msg: "Article Not Found" });
+      }
+    });
+};
