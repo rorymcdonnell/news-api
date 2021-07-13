@@ -105,8 +105,8 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
-describe.only("/api/articles", () => {
-  test.only("GET status: 200 - responds with articles array of articles objects", () => {
+describe("/api/articles", () => {
+  test("GET status: 200 - responds with articles array of articles objects", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -122,7 +122,7 @@ describe.only("/api/articles", () => {
               topic: expect.any(String),
               author: expect.any(String),
               created_at: expect.any(String),
-              number_of_comments: expect.any(String),
+              number_of_comments: expect.any(Number),
             })
           );
         });

@@ -1,6 +1,4 @@
 const db = require("../db/connection");
-const fs = require("fs/promises");
-const { postgresNumber } = require("../db/utils/data-manipulation");
 
 exports.selectArticlesById = (article_id) => {
   return db
@@ -33,28 +31,98 @@ exports.updateArticlesById = (article_id, inc_votes) => {
     });
 };
 
-// GET /api/articles
-exports.selectAllArticles = async function (
-  sort_by = "created_at",
-  order = "DESC",
-  topic
-) {
-  let whereTopic = "";
+// exports.selectAllArticles = ({
+//   sort_by = "created_at",
+//   order = "DESC",
+//   topic,
+// }) => {
+//   const validColumns = [
+//     "created_at",
+//     "author",
+//     "votes",
+//     "title",
+//     "article_id",
+//     "topic",
+//     "number_of_comments",
+//   ];
+
+//   if (!validColumns.includes(sort_by)) {
+//     return Promise.reject({ status: 400, msg: "invalid sort_by column" });
+//   }
+
+//   let queryStr = `SELECT articles.*, COUNT(comment_id) AS number_of_comments
+//     FROM articles
+//     LEFT JOIN comments ON articles.article_id = comments.article_id
+//     GROUP BY articles.article_id `;
+
+//   queryStr += `ORDER BY ${sort_by} ${order};`;
+//   console.log(queryStr);
+//   return db.query(queryStr).then((response) => {
+//     return response.rows;
+//   });
+// };
+exports.selectAllArticles = async (sort_by, order, topic) => {
+  let query_values = [];
+  let queryStr = `SELECT articles.*, COUNT (comment_id)::INT AS number_of_comments
+  FROM articles
+  LEFT JOIN comments ON articles.article_id = comments.article_id
+  `;
+
   if (topic) {
-    whereTopic = format("WHERE articles.topic = %L", topic);
+    queryStr += ` WHERE topic = $1`;
+    query_values.push(topic);
   }
-  const result = await dbConn.query(
-    `SELECT article_id, title, votes, topic, author, created_at, COUNT(comments.comment_id) AS comment_count FROM articles NATURAL LEFT JOIN comments ${whereTopic} GROUP BY article_id ORDER BY ${sort_by} ${order};`
-  );
-  if (result.rows.length === 0) {
-    const validTopic = await dbConn.query(
-      `SELECT * FROM topics WHERE slug = '${topic}';`
-    );
-    if (validTopic.rows.length === 0) {
-      return undefined;
+
+  queryStr += ` GROUP BY articles.article_id`;
+
+  if (
+    sort_by &&
+    ![
+      "author",
+      "title",
+      "article_id",
+      "topic",
+      "created_at",
+      "votes",
+      "number_of_comments",
+    ].includes(sort_by)
+  ) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid sort query: column doesn't exist",
+    });
+  }
+
+  if (order && !["asc", "desc"].includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid order query" });
+  }
+
+  if (sort_by) {
+    queryStr += ` ORDER BY ${sort_by} `;
+  } else {
+    queryStr += ` ORDER BY articles.created_at `;
+  }
+
+  if (order) {
+    queryStr += ` ${order} `;
+  } else {
+    queryStr += ` DESC`;
+  }
+
+  queryStr += `;`;
+
+  const allArticles = await db.query(queryStr, query_values);
+
+  if (topic && allArticles.rows.length === 0) {
+    const topicResult = await db.query(`SELECT * FROM topics WHERE slug = $1`, [
+      topic,
+    ]);
+    if (topicResult.rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "Topic not found" });
     }
   }
-  return postgresNumber(result.rows, "comment_count");
+
+  return allArticles.rows;
 };
 
 exports.checkArticleExists = (article_id) => {
