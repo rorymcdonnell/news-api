@@ -1,7 +1,7 @@
 const {
   selectCommentsByArticle,
   submitComment,
-} = require("../models/comments.models");
+} = require("../models/comments-models");
 
 function getCommentsByArticle(req, res, next) {
   const { article_id } = req.params;

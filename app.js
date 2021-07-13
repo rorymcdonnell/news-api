@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 const { getTopics } = require("./controllers/topics-controllers");
+const {
+  postComment,
+  getCommentsByArticle,
+} = require("./controllers/comments-controllers");
 const cors = require("cors");
 
 const {
@@ -8,10 +12,6 @@ const {
   patchArticlesById,
   getAllArticles,
 } = require("./controllers/articles-controllers");
-const {
-  postComment,
-  getCommentsByArticle,
-} = require("./controllers/comments-controllers");
 
 app.use(cors());
 
