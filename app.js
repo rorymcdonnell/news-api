@@ -13,6 +13,8 @@ const {
   getAllArticles,
 } = require("./controllers/articles-controllers");
 
+const { getUserByUsername } = require("./controllers/users-controllers");
+
 app.use(cors());
 
 app.use(express.json());
@@ -24,6 +26,8 @@ app.get("/api/articles", getAllArticles);
 
 app.get("/api/:article_id/comments", getCommentsByArticle);
 app.post("/api/:article_id/comments", postComment);
+
+app.get("/api/:username", getUserByUsername);
 
 app.use((err, req, res, next) => {
   if (err.status) {
