@@ -16,7 +16,9 @@ function getUserByUsername(req, res, next) {
 function getAllUsers(req, res, next) {
   selectAllUsers()
     .then((users) => {
+      console.log(users, "line 19");
       res.status(200).send({ users });
+      console.log(users, "line 21");
     })
     .catch(next);
 }

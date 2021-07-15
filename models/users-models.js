@@ -15,5 +15,6 @@ exports.selectUserByUsername = async (username) => {
 exports.selectAllUsers = async () => {
   let queryStr = `SELECT * FROM users;`;
 
-  await db.query(queryStr);
+  const usersResult = await db.query(queryStr);
+  return usersResult.rows;
 };
