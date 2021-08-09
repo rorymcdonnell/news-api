@@ -1,22 +1,22 @@
 const express = require("express");
 const app = express();
-const { getTopics } = require("./controllers/topics-controllers");
-const {
-  postComment,
-  getCommentsByArticle,
-} = require("./controllers/comments-controllers");
+// const { getTopics } = require("./controllers/topics-controllers");
+// const {
+//   postComment,
+//   getCommentsByArticle,
+// } = require("./controllers/comments-controllers");
 const cors = require("cors");
 
-const {
-  getArticlesById,
-  patchArticlesById,
-  getAllArticles,
-} = require("./controllers/articles-controllers");
+// const {
+//   getArticlesById,
+//   patchArticlesById,
+//   getAllArticles,
+// } = require("./controllers/articles-controllers");
 
-const {
-  getUserByUsername,
-  getAllUsers,
-} = require("./controllers/users-controllers");
+// const {
+//   getUserByUsername,
+//   getAllUsers,
+// } = require("./controllers/users-controllers");
 
 const apiRouter = require("./routers/api.router");
 
@@ -24,15 +24,13 @@ app.use(cors());
 
 app.use(express.json());
 
-app.get("/api/topics", getTopics);
-
 app.use("/api", apiRouter);
 
-app.get("/api/:article_id/comments", getCommentsByArticle);
-app.post("/api/:article_id/comments", postComment);
-
-app.get("/api/users", getAllUsers);
-app.get("/api/:username", getUserByUsername);
+// app.get("/api/topics", getTopics);
+// app.get("/api/:article_id/comments", getCommentsByArticle);
+// app.post("/api/:article_id/comments", postComment);
+// app.get("/api/users", getAllUsers);
+// app.get("/api/:username", getUserByUsername);
 
 app.use((err, req, res, next) => {
   if (err.status) {
