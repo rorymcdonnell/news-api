@@ -8,9 +8,11 @@ const {
 
 const apiArticlesRouter = express.Router();
 
+apiArticlesRouter.route("/").get(getAllArticles);
+
 apiArticlesRouter
-  .get("/articles", getAllArticles)
-  .get("/articles/:article_id", getArticlesById)
-  .patch("/articles/:article_id", patchArticlesById);
+  .route("/:article_id")
+  .get(getArticlesById)
+  .patch(patchArticlesById);
 
 module.exports = apiArticlesRouter;

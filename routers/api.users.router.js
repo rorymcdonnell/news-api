@@ -7,8 +7,6 @@ const {
 
 const apiUsersRouter = express.Router();
 
-apiUsersRouter
-  .get("/users", getAllUsers)
-  .get("/users/:username", getUserByUsername);
+apiUsersRouter.get("/", getAllUsers).get("/:username", getUserByUsername);
 
 module.exports = apiUsersRouter;
