@@ -18,14 +18,15 @@ const {
   getAllUsers,
 } = require("./controllers/users-controllers");
 
+const apiRouter = require("./routers/api.router");
+
 app.use(cors());
 
 app.use(express.json());
 
 app.get("/api/topics", getTopics);
-app.get("/api/articles/:article_id", getArticlesById);
-app.patch("/api/articles/:article_id", patchArticlesById);
-app.get("/api/articles", getAllArticles);
+
+app.use("/api", apiRouter);
 
 app.get("/api/:article_id/comments", getCommentsByArticle);
 app.post("/api/:article_id/comments", postComment);
