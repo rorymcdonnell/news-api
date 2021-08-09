@@ -4,7 +4,7 @@ const {
   getArticlesById,
   patchArticlesById,
   getAllArticles,
-} = require("./controllers/articles-controllers");
+} = require("../controllers/articles-controllers");
 
 const apiArticlesRouter = Router();
 
