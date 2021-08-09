@@ -1,11 +1,11 @@
-const { Router } = require("express");
+const express = require("express");
 
 const {
   getCommentsByArticle,
   postComment,
 } = require("../controllers/comments-controllers");
 
-const apiCommentsRouter = Router();
+const apiCommentsRouter = express.Router();
 
 apiCommentsRouter
   .get("/api/:article_id/comments", getCommentsByArticle)

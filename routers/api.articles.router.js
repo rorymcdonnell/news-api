@@ -1,4 +1,4 @@
-const { Router } = require("express");
+const express = require("express");
 
 const {
   getArticlesById,
@@ -6,7 +6,7 @@ const {
   getAllArticles,
 } = require("../controllers/articles-controllers");
 
-const apiArticlesRouter = Router();
+const apiArticlesRouter = express.Router();
 
 apiArticlesRouter
   .get("/articles", getAllArticles)

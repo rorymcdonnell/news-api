@@ -1,11 +1,11 @@
-const { Router } = require("express");
+const express = require("express");
 
 const {
   getUserByUsername,
   getAllUsers,
 } = require("../controllers/users-controllers");
 
-const apiUsersRouter = Router();
+const apiUsersRouter = express.Router();
 
 apiUsersRouter
   .get("/users", getAllUsers)
