@@ -3,7 +3,7 @@ const {
   selectAllUsers,
 } = require("../models/users-models");
 
-function getUserByUsername(req, res, next) {
+exports.getUserByUsername = (req, res, next) => {
   const { username } = req.params;
 
   selectUserByUsername(username)
@@ -11,9 +11,9 @@ function getUserByUsername(req, res, next) {
       res.status(200).send({ user });
     })
     .catch(next);
-}
+};
 
-function getAllUsers(req, res, next) {
+exports.getAllUsers = (req, res, next) => {
   selectAllUsers()
     .then((users) => {
       console.log(users, "line 19");
@@ -21,6 +21,4 @@ function getAllUsers(req, res, next) {
       console.log(users, "line 21");
     })
     .catch(next);
-}
-
-module.exports = { getUserByUsername, getAllUsers };
+};

@@ -1,36 +1,22 @@
 const express = require("express");
 const app = express();
-// const { getTopics } = require("./controllers/topics-controllers");
-// const {
-//   postComment,
-//   getCommentsByArticle,
-// } = require("./controllers/comments-controllers");
+
 const cors = require("cors");
 
-// const {
-//   getArticlesById,
-//   patchArticlesById,
-//   getAllArticles,
-// } = require("./controllers/articles-controllers");
-
-// const {
-//   getUserByUsername,
-//   getAllUsers,
-// } = require("./controllers/users-controllers");
-
 const apiRouter = require("./routers/api.router");
+
+const {
+  handle500ServerErrors,
+  handlePSQL400Errors,
+} = require("./errors/errors");
 
 app.use(cors());
 
 app.use(express.json());
 
 app.use("/api", apiRouter);
-
-// app.get("/api/topics", getTopics);
-// app.get("/api/:article_id/comments", getCommentsByArticle);
-// app.post("/api/:article_id/comments", postComment);
-// app.get("/api/users", getAllUsers);
-// app.get("/api/:username", getUserByUsername);
+// app.get("/api/articles/:article_id/comments", getCommentsByArticle);
+// app.post("/api/articles/:article_id/comments", postComment);
 
 app.use((err, req, res, next) => {
   if (err.status) {
@@ -39,14 +25,8 @@ app.use((err, req, res, next) => {
     next(err);
   }
 });
-app.use((err, req, res, next) => {
-  if (err.code === "22P02") {
-    res.status(400).send({ msg: "invalid ID, sort it out!" });
-  } else {
-    next(err);
-  }
-});
-app.use((err, req, res, next) => {
-  res.status(500).send({ msg: "internal server error!" });
-});
+
+// Error handling
+app.use(handlePSQL400Errors);
+app.use(handle500ServerErrors);
 module.exports = app;

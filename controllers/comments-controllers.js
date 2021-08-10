@@ -3,7 +3,7 @@ const {
   submitComment,
 } = require("../models/comments-models");
 
-function getCommentsByArticle(req, res, next) {
+exports.getCommentsByArticle = (req, res, next) => {
   const { article_id } = req.params;
 
   selectCommentsByArticle(article_id)
@@ -11,9 +11,9 @@ function getCommentsByArticle(req, res, next) {
       res.status(200).send({ comments });
     })
     .catch(next);
-}
+};
 
-function postComment(req, res, next) {
+exports.postComment = (req, res, next) => {
   const { article_id } = req.params;
   const { username, body } = req.body;
   const areRequestKeysValid =
@@ -26,6 +26,4 @@ function postComment(req, res, next) {
       res.status(201).send({ comment });
     })
     .catch(next);
-}
-
-module.exports = { getCommentsByArticle, postComment };
+};
